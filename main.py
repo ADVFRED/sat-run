@@ -1,66 +1,58 @@
-def on_up_pressed():
-    if encounter != 1:
-        P1.y += -20
-        P1.vy = 10
-controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
+@namespace
+class SpriteKind:
+    objective = SpriteKind.create()
 
 def on_on_overlap(sprite, otherSprite):
-    global encounter, WordIndice, InsertLocation, response, question
-    QuestionIndices: List[number] = []
-    # WrongIndices: List[number] = []
+    global encounter, WordIndice, DefinitionIndice, answer, response, question, score
     encounter = 1
     WordIndice = randint(0, len(WordList))
-    InsertLocation = randint(0, 3)
-    response = 5
-    question=""
-    # make list of wrong answers
-    while len(QuestionIndices) < 3:
-        indice = randint(0, len(WordList))
-        if QuestionIndices.index(indice) < 0 and indice != WordIndice:
-            QuestionIndices.append(indice)
-    # add right answer at random location
-    if InsertLocation != 3:
-        QuestionIndices.insert_at(0, WordIndice)
+    DefinitionIndice = randint(0, len(WordList))
+    # checks if randomly selected word and definition match
+    if WordList[WordIndice][0] == WordList[DefinitionIndice][0]:
+        answer = True
     else:
-        QuestionIndices.append(WordIndice)
-    game.show_long_text(len(QuestionIndices), DialogLayout.BOTTOM)
-    game.show_long_text(QuestionIndices, DialogLayout.BOTTOM)
-    question = "Definition of " + WordList[indice][0] + " is:\n"+"1: "+WordList[QuestionIndices[0]][1]+"\n 2: "+WordList[QuestionIndices[1]][1]+"\n"
-    # question+="[1] " + WordList[QuestionIndices[0]][0] + "\n[2] " + WordList[QuestionIndices[1]][0] + "\n[3] "+ WordList[QuestionIndices[2]][1] + ", [4] " + WordList[QuestionIndices[3]][1]
-    # question = "num 1-4"
-    #question="HI! \n"+WordList[0][0]+"\n"+WordList[1][0]+"\n"+WordList[2][0]+"\n"+WordList[3][0]
+        answer = False
+    response = 2
+    question = "Is the definition of " + WordList[WordIndice][0] + " " + WordList[DefinitionIndice][1] + "? \nTrue=1, False =0"
     while encounter == 1:
         game.show_long_text(question, DialogLayout.FULL)
-        response = game.ask_for_number("answer (5 to show question again)")
-        if response == 5:
+        response = game.ask_for_number("answer (2 to show question again)")
+        if response == 2:
             continue
         else:
-            game.show_long_text("you answered!", DialogLayout.BOTTOM)
+            if answer == False and response == 0 or answer == True and response == 1:
+                score = score + 1
+                game.show_long_text("" + "Score!\n Score is: " + ("" + str(score)),
+                    DialogLayout.BOTTOM)
+            else:
+                game.show_long_text("Missed one. Score is: " + ("" + str(score)),
+                    DialogLayout.BOTTOM)
             encounter = 0
             P1.x += 40
 sprites.on_overlap(SpriteKind.player, SpriteKind.food, on_on_overlap)
 
+score = 0
 question = ""
 response = 0
-InsertLocation = 0
+answer = False
+DefinitionIndice = 0
 WordIndice = 0
 P1: Sprite = None
 encounter = 0
 WordList: List[List[str]] = []
-question22 = ""
-response23 = 0
-InsertLocation22 = 0
-WordIndice22 = 0
-response22 = 0
-WordIndice2 = 0
-InsertLocation2 = 0
-response2 = 0
-question2 = ""
+InsertLocation = 0
+QuestionIndices: List[number] = []
 scene.set_background_color(6)
 WordList = [["abate", "to stop"],
-    ["abyss", "pit"],
-    ["exiate", "atone"],
-    ["import", "bring in"]]
+    ["abyss", "a pit"],
+    ["exiate", "to atone"],
+    ["import", "to bring in"],
+    ["incongruity", "not in harmony with ones surroundings"],
+    ["indefatigable", "not tiring"],
+    ["inexplicable", "unexplainable or Inconceivable!"],
+    ["infamous", "a well known reputation of evil"],
+    ["piety", "being reverent, religous"],
+    ["scintillating", "sparkly, shiny"]]
 tiles.set_current_tilemap(tilemap("""
     level1
 """))
@@ -84,7 +76,7 @@ P1 = sprites.create(img("""
             . . . f f . . f f . . . .
     """),
     SpriteKind.player)
-coin = sprites.create(img("""
+coin1 = sprites.create(img("""
         . . . . . . . . . . . . . . . . 
             . . . . . 5 5 5 5 5 5 5 . . . . 
             . . . . 5 5 5 5 5 5 5 5 5 . . . 
@@ -102,19 +94,35 @@ coin = sprites.create(img("""
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . .
     """),
-    SpriteKind.food)
-coin.set_position(30, 105)
+    SpriteKind.objective)
+coin1.set_position(32, 105)
 P1.set_position(10, 100)
-P1.set_velocity(20, 60)
 scene.camera_follow_sprite(P1)
 
 def on_forever():
+    if controller.up.is_pressed() and controller.right.is_pressed():
+        if encounter != 1 and P1.is_hitting_tile(CollisionDirection.BOTTOM):
+            P1.y += -20
+            P1.x += 20
+            P1.vy = 10
+    elif controller.up.is_pressed():
+        if encounter != 1 and P1.is_hitting_tile(CollisionDirection.BOTTOM):
+            P1.y += -20
+            P1.vy = 20
+    elif controller.right.is_pressed():
+        if encounter != 1 and P1.is_hitting_tile(CollisionDirection.BOTTOM):
+            P1.vx = 20
+    else:
+        pass
+forever(on_forever)
+
+def on_forever2():
     if P1.is_hitting_tile(CollisionDirection.RIGHT):
         P1.vy = 0
     else:
-        P1.vy = 10
+        P1.vy = 20
     if P1.is_hitting_tile(CollisionDirection.BOTTOM):
         P1.vy = 0
     else:
-        P1.vy = 10
-forever(on_forever)
+        P1.vy = 20
+forever(on_forever2)

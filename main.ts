@@ -1,72 +1,53 @@
-controller.up.onEvent(ControllerButtonEvent.Pressed, function on_up_pressed() {
-    if (encounter != 1) {
-        P1.y += -20
-        P1.vy = 10
-    }
-    
-})
+namespace SpriteKind {
+    export const objective = SpriteKind.create()
+}
+
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function on_on_overlap(sprite: Sprite, otherSprite: Sprite) {
-    let indice: number;
     
-    let QuestionIndices : number[] = []
-    //  WrongIndices: List[number] = []
     encounter = 1
     WordIndice = randint(0, WordList.length)
-    InsertLocation = randint(0, 3)
-    response = 5
-    question = ""
-    //  make list of wrong answers
-    while (QuestionIndices.length < 3) {
-        indice = randint(0, WordList.length)
-        if (QuestionIndices.indexOf(indice) < 0 && indice != WordIndice) {
-            QuestionIndices.push(indice)
-        }
-        
-    }
-    //  add right answer at random location
-    if (InsertLocation != 3) {
-        QuestionIndices.insertAt(0, WordIndice)
+    DefinitionIndice = randint(0, WordList.length)
+    //  checks if randomly selected word and definition match
+    if (WordList[WordIndice][0] == WordList[DefinitionIndice][0]) {
+        answer = true
     } else {
-        QuestionIndices.push(WordIndice)
+        answer = false
     }
     
-    game.showLongText(QuestionIndices.length, DialogLayout.Bottom)
-    game.showLongText(QuestionIndices, DialogLayout.Bottom)
-    question = "Definition of " + WordList[indice][0] + " is:\n" + "1: " + WordList[QuestionIndices[0]][1] + "\n 2: " + WordList[QuestionIndices[1]][1] + "\n"
-    //  question+="[1] " + WordList[QuestionIndices[0]][0] + "\n[2] " + WordList[QuestionIndices[1]][0] + "\n[3] "+ WordList[QuestionIndices[2]][1] + ", [4] " + WordList[QuestionIndices[3]][1]
-    //  question = "num 1-4"
-    // question="HI! \n"+WordList[0][0]+"\n"+WordList[1][0]+"\n"+WordList[2][0]+"\n"+WordList[3][0]
+    response = 2
+    question = "Is the definition of " + WordList[WordIndice][0] + " " + WordList[DefinitionIndice][1] + "? \nTrue=1, False =0"
     while (encounter == 1) {
         game.showLongText(question, DialogLayout.Full)
-        response = game.askForNumber("answer (5 to show question again)")
-        if (response == 5) {
+        response = game.askForNumber("answer (2 to show question again)")
+        if (response == 2) {
             continue
         } else {
-            game.showLongText("you answered!", DialogLayout.Bottom)
+            if (answer == false && response == 0 || answer == true && response == 1) {
+                score = score + 1
+                game.showLongText("" + "Score!\n Score is: " + ("" + ("" + score)), DialogLayout.Bottom)
+            } else {
+                game.showLongText("Missed one. Score is: " + ("" + ("" + score)), DialogLayout.Bottom)
+            }
+            
             encounter = 0
             P1.x += 40
         }
         
     }
 })
+let score = 0
 let question = ""
 let response = 0
-let InsertLocation = 0
+let answer = false
+let DefinitionIndice = 0
 let WordIndice = 0
 let P1 : Sprite = null
 let encounter = 0
 let WordList : string[][] = []
-let question22 = ""
-let response23 = 0
-let InsertLocation22 = 0
-let WordIndice22 = 0
-let response22 = 0
-let WordIndice2 = 0
-let InsertLocation2 = 0
-let response2 = 0
-let question2 = ""
+let InsertLocation = 0
+let QuestionIndices : number[] = []
 scene.setBackgroundColor(6)
-WordList = [["abate", "to stop"], ["abyss", "pit"], ["exiate", "atone"], ["import", "bring in"]]
+WordList = [["abate", "to stop"], ["abyss", "a pit"], ["exiate", "to atone"], ["import", "to bring in"], ["incongruity", "not in harmony with ones surroundings"], ["indefatigable", "not tiring"], ["inexplicable", "unexplainable or Inconceivable!"], ["infamous", "a well known reputation of evil"], ["piety", "being reverent, religous"], ["scintillating", "sparkly, shiny"]]
 tiles.setCurrentTilemap(tilemap`
     level1
 `)
@@ -89,7 +70,7 @@ P1 = sprites.create(img`
             . . . f f f f f f . . . . 
             . . . f f . . f f . . . .
     `, SpriteKind.Player)
-let coin = sprites.create(img`
+let coin1 = sprites.create(img`
         . . . . . . . . . . . . . . . . 
             . . . . . 5 5 5 5 5 5 5 . . . . 
             . . . . 5 5 5 5 5 5 5 5 5 . . . 
@@ -106,22 +87,45 @@ let coin = sprites.create(img`
             . . . . . 5 5 5 5 5 5 5 . . . . 
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . .
-    `, SpriteKind.Food)
-coin.setPosition(30, 105)
+    `, SpriteKind.objective)
+coin1.setPosition(32, 105)
 P1.setPosition(10, 100)
-P1.setVelocity(20, 60)
 scene.cameraFollowSprite(P1)
 forever(function on_forever() {
+    if (controller.up.isPressed() && controller.right.isPressed()) {
+        if (encounter != 1 && P1.isHittingTile(CollisionDirection.Bottom)) {
+            P1.y += -20
+            P1.x += 20
+            P1.vy = 10
+        }
+        
+    } else if (controller.up.isPressed()) {
+        if (encounter != 1 && P1.isHittingTile(CollisionDirection.Bottom)) {
+            P1.y += -20
+            P1.vy = 20
+        }
+        
+    } else if (controller.right.isPressed()) {
+        if (encounter != 1 && P1.isHittingTile(CollisionDirection.Bottom)) {
+            P1.vx = 20
+        }
+        
+    } else {
+        
+    }
+    
+})
+forever(function on_forever2() {
     if (P1.isHittingTile(CollisionDirection.Right)) {
         P1.vy = 0
     } else {
-        P1.vy = 10
+        P1.vy = 20
     }
     
     if (P1.isHittingTile(CollisionDirection.Bottom)) {
         P1.vy = 0
     } else {
-        P1.vy = 10
+        P1.vy = 20
     }
     
 })
