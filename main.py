@@ -2,6 +2,11 @@
 class SpriteKind:
     objective = SpriteKind.create()
 
+def on_right_pressed():
+    if encounter != 1 and P1.is_hitting_tile(CollisionDirection.BOTTOM):
+        P1.vx = 20
+controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
+
 def on_on_overlap(sprite, otherSprite):
     global encounter, WordIndice, DefinitionIndice, answer, response, question, score
     encounter = 1
@@ -13,10 +18,10 @@ def on_on_overlap(sprite, otherSprite):
     else:
         answer = False
     response = 2
-    question = "Is the definition of " + WordList[WordIndice][0] + " " + WordList[DefinitionIndice][1] + "? \nTrue=1, False =0"
+    question = "Is the definition of " + WordList[WordIndice][0] + " " + WordList[DefinitionIndice][1] + "? \nTrue=1, False =0\nCLick Z/[A] to answer"
     while encounter == 1:
         game.show_long_text(question, DialogLayout.FULL)
-        response = game.ask_for_number("answer (2 to show question again)")
+        response = game.ask_for_number("answer on numpad, 0=False,1=True,2=review question")
         if response == 2:
             continue
         else:
@@ -28,8 +33,14 @@ def on_on_overlap(sprite, otherSprite):
                 game.show_long_text("Missed one. Score is: " + ("" + str(score)),
                     DialogLayout.BOTTOM)
             encounter = 0
-            P1.x += 40
+            P1.x += 30
 sprites.on_overlap(SpriteKind.player, SpriteKind.food, on_on_overlap)
+
+def on_combos_attach_combo():
+    if encounter != 1 and P1.is_hitting_tile(CollisionDirection.BOTTOM):
+        P1.y += -20
+        P1.vy = 40
+controller.combos.attach_combo("u", on_combos_attach_combo)
 
 score = 0
 question = ""
@@ -40,8 +51,8 @@ WordIndice = 0
 P1: Sprite = None
 encounter = 0
 WordList: List[List[str]] = []
-InsertLocation = 0
 QuestionIndices: List[number] = []
+InsertLocation = 0
 scene.set_background_color(6)
 WordList = [["abate", "to stop"],
     ["abyss", "a pit"],
@@ -94,29 +105,252 @@ coin1 = sprites.create(img("""
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . .
     """),
-    SpriteKind.objective)
+    SpriteKind.food)
+coin2 = sprites.create(img("""
+        . . . . . . . . . . . . . . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . .
+    """),
+    SpriteKind.food)
+coin3 = sprites.create(img("""
+        . . . . . . . . . . . . . . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . .
+    """),
+    SpriteKind.food)
+coin4 = sprites.create(img("""
+        . . . . . . . . . . . . . . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . .
+    """),
+    SpriteKind.food)
+coin5 = sprites.create(img("""
+        . . . . . . . . . . . . . . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . .
+    """),
+    SpriteKind.food)
+coin6 = sprites.create(img("""
+        . . . . . . . . . . . . . . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . .
+    """),
+    SpriteKind.food)
+coin7 = sprites.create(img("""
+        . . . . . . . . . . . . . . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . .
+    """),
+    SpriteKind.food)
+coin8 = sprites.create(img("""
+        . . . . . . . . . . . . . . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . .
+    """),
+    SpriteKind.food)
+coin9 = sprites.create(img("""
+        . . . . . . . . . . . . . . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . .
+    """),
+    SpriteKind.food)
+coin10 = sprites.create(img("""
+        . . . . . . . . . . . . . . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . .
+    """),
+    SpriteKind.food)
+coin11 = sprites.create(img("""
+        . . . . . . . . . . . . . . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . .
+    """),
+    SpriteKind.food)
+coin_12 = sprites.create(img("""
+        . . . . . . . . . . . . . . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . .
+    """),
+    SpriteKind.food)
+coin13 = sprites.create(img("""
+        . . . . . . . . . . . . . . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . .
+    """),
+    SpriteKind.food)
 coin1.set_position(32, 105)
-P1.set_position(10, 100)
+coin2.set_position(320, 50)
+coin3.set_position(432, 105)
+coin4.set_position(640, 96)
+coin5.set_position(720, 105)
+coin6.set_position(750, 110)
+coin7.set_position(860, 60)
+coin8.set_position(912, 60)
+coin9.set_position(1024, 88)
+coin10.set_position(1136, 56)
+coin11.set_position(1280, 24)
+coin_12.set_position(1344, 56)
+coin13.set_position(1510, 105)
+P1.set_position(13, 105)
 scene.camera_follow_sprite(P1)
 
 def on_forever():
-    if controller.up.is_pressed() and controller.right.is_pressed():
-        if encounter != 1 and P1.is_hitting_tile(CollisionDirection.BOTTOM):
-            P1.y += -20
-            P1.x += 20
-            P1.vy = 10
-    elif controller.up.is_pressed():
-        if encounter != 1 and P1.is_hitting_tile(CollisionDirection.BOTTOM):
-            P1.y += -20
-            P1.vy = 20
-    elif controller.right.is_pressed():
-        if encounter != 1 and P1.is_hitting_tile(CollisionDirection.BOTTOM):
-            P1.vx = 20
-    else:
-        pass
-forever(on_forever)
-
-def on_forever2():
     if P1.is_hitting_tile(CollisionDirection.RIGHT):
         P1.vy = 0
     else:
@@ -125,4 +359,4 @@ def on_forever2():
         P1.vy = 0
     else:
         P1.vy = 20
-forever(on_forever2)
+forever(on_forever)
