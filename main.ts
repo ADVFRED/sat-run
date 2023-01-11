@@ -85,7 +85,6 @@ P1 = sprites.create(img`
             . . . f f f f f f . . . . 
             . . . f f . . f f . . . .
     `, SpriteKind.Player)
-/*
 coin1.setPosition(32, 105)
 coin2.setPosition(320, 50)
 coin3.setPosition(432, 105)
@@ -98,7 +97,7 @@ coin9.setPosition(1024, 88)
 coin10.setPosition(1136, 56)
 coin11.setPosition(1280, 24)
 coin_12.setPosition(1344, 56)
-coin13.setPosition(1510, 105)*/
+coin13.setPosition(1510, 105)
 P1.setPosition(13, 105)
 scene.cameraFollowSprite(P1)
 forever(function on_forever() {
