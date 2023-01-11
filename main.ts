@@ -3,10 +3,11 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         P1.setPosition(P1.x, P1.y + 1)
     }
 })
-let P1: Sprite = null
 let encounter = 0
+let P1: Sprite = null
 scene.setBackgroundColor(6)
 tiles.setCurrentTilemap(tilemap`level1`)
+scene.cameraFollowSprite(P1)
 encounter = 0
 P1 = sprites.create(img`
     . . . . f f f f . . . . . 
@@ -26,6 +27,6 @@ P1 = sprites.create(img`
     . . . f f f f f f . . . . 
     . . . f f . . f f . . . . 
     `, SpriteKind.Player)
-P1.setPosition(0, 118)
-P1.setVelocity(50, 50)
-scene.cameraFollowSprite(P1)
+P1.setVelocity(50, 100)
+console.logValue(P1, 0)
+P1.setPosition(0, 0)

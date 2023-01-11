@@ -1,11 +1,14 @@
 def on_a_pressed():
     if encounter != 0:
-        P1.set_position(P1.x, P1.y+1)
+        P1.set_position(P1.x, P1.y + 1)
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
 P1: Sprite = None
 encounter = 0
 scene.set_background_color(6)
+tiles.set_current_tilemap(tilemap("""
+    level1
+"""))
 encounter = 0
 P1 = sprites.create(img("""
         . . . . f f f f . . . . . 
@@ -26,5 +29,5 @@ P1 = sprites.create(img("""
             . . . f f . . f f . . . .
     """),
     SpriteKind.player)
-P1.set_position(0, 0)
-P1.set_velocity(50, 50)
+P1.y = 0
+scene.camera_follow_sprite(P1)
