@@ -9,18 +9,16 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function on_on_overlap(spr
     let indice: number;
     
     let QuestionIndices : number[] = []
-    let WrongIndices : number[] = []
-    //  definitions
-    //  , response
+    //  WrongIndices: List[number] = []
     encounter = 1
     WordIndice = randint(0, WordList.length)
     InsertLocation = randint(0, 3)
     response = 5
+    question = ""
     //  make list of wrong answers
-    while (WrongIndices.length < 3) {
+    while (QuestionIndices.length < 3) {
         indice = randint(0, WordList.length)
-        if (WrongIndices.indexOf(indice) < 0 && indice != WordIndice) {
-            WrongIndices.push(indice)
+        if (QuestionIndices.indexOf(indice) < 0 && indice != WordIndice) {
             QuestionIndices.push(indice)
         }
         
@@ -30,14 +28,17 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function on_on_overlap(spr
         QuestionIndices.insertAt(0, WordIndice)
     } else {
         QuestionIndices.push(WordIndice)
-        game.showLongText(QuestionIndices.length, DialogLayout.Bottom)
     }
     
-    question = "Definition of " + WordList[indice][0] + "is: [1] " + WordList[QuestionIndices[0]][1] + ", [2] " + WordList[QuestionIndices[1]][1] + ", [3] " + WordList[QuestionIndices[2]][1] + ", [4] " + WordList[QuestionIndices[3]][1]
-    // question = "num 1-4"
+    game.showLongText(QuestionIndices.length, DialogLayout.Bottom)
+    game.showLongText(QuestionIndices, DialogLayout.Bottom)
+    question = "Definition of " + WordList[indice][0] + " is:\n" + "1: " + WordList[QuestionIndices[0]][1] + "\n 2: " + WordList[QuestionIndices[1]][1] + "\n"
+    //  question+="[1] " + WordList[QuestionIndices[0]][0] + "\n[2] " + WordList[QuestionIndices[1]][0] + "\n[3] "+ WordList[QuestionIndices[2]][1] + ", [4] " + WordList[QuestionIndices[3]][1]
+    //  question = "num 1-4"
+    // question="HI! \n"+WordList[0][0]+"\n"+WordList[1][0]+"\n"+WordList[2][0]+"\n"+WordList[3][0]
     while (encounter == 1) {
-        game.showLongText(question, DialogLayout.Bottom)
-        response = game.askForNumber("answer (5 to show question again):")
+        game.showLongText(question, DialogLayout.Full)
+        response = game.askForNumber("answer (5 to show question again)")
         if (response == 5) {
             continue
         } else {
@@ -65,7 +66,7 @@ let InsertLocation2 = 0
 let response2 = 0
 let question2 = ""
 scene.setBackgroundColor(6)
-WordList = [["abate", "to stop"], ["abyss", "pit"], ["exiate", "idk tbh"], ["import", "bring in"]]
+WordList = [["abate", "to stop"], ["abyss", "pit"], ["exiate", "atone"], ["import", "bring in"]]
 tiles.setCurrentTilemap(tilemap`
     level1
 `)

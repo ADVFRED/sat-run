@@ -7,30 +7,31 @@ controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 def on_on_overlap(sprite, otherSprite):
     global encounter, WordIndice, InsertLocation, response, question
     QuestionIndices: List[number] = []
-    WrongIndices: List[number] = []
-    # definitions
-    # , response
+    # WrongIndices: List[number] = []
     encounter = 1
     WordIndice = randint(0, len(WordList))
     InsertLocation = randint(0, 3)
     response = 5
+    question=""
     # make list of wrong answers
-    while len(WrongIndices) < 3:
+    while len(QuestionIndices) < 3:
         indice = randint(0, len(WordList))
-        if WrongIndices.index(indice) < 0 and indice != WordIndice:
-            WrongIndices.append(indice)
+        if QuestionIndices.index(indice) < 0 and indice != WordIndice:
             QuestionIndices.append(indice)
     # add right answer at random location
     if InsertLocation != 3:
         QuestionIndices.insert_at(0, WordIndice)
     else:
         QuestionIndices.append(WordIndice)
-        game.show_long_text(QuestionIndices.length, DialogLayout.BOTTOM)
-    question = "Definition of " + WordList[indice][0] + "is: [1] " + WordList[QuestionIndices[0]][1] + ", [2] " + WordList[QuestionIndices[1]][1] + ", [3] " + WordList[QuestionIndices[2]][1] + ", [4] " + WordList[QuestionIndices[3]][1]
-    #question = "num 1-4"
+    game.show_long_text(len(QuestionIndices), DialogLayout.BOTTOM)
+    game.show_long_text(QuestionIndices, DialogLayout.BOTTOM)
+    question = "Definition of " + WordList[indice][0] + " is:\n"+"1: "+WordList[QuestionIndices[0]][1]+"\n 2: "+WordList[QuestionIndices[1]][1]+"\n"
+    # question+="[1] " + WordList[QuestionIndices[0]][0] + "\n[2] " + WordList[QuestionIndices[1]][0] + "\n[3] "+ WordList[QuestionIndices[2]][1] + ", [4] " + WordList[QuestionIndices[3]][1]
+    # question = "num 1-4"
+    #question="HI! \n"+WordList[0][0]+"\n"+WordList[1][0]+"\n"+WordList[2][0]+"\n"+WordList[3][0]
     while encounter == 1:
-        game.show_long_text(question, DialogLayout.BOTTOM)
-        response = game.ask_for_number("answer (5 to show question again):")
+        game.show_long_text(question, DialogLayout.FULL)
+        response = game.ask_for_number("answer (5 to show question again)")
         if response == 5:
             continue
         else:
@@ -58,7 +59,7 @@ question2 = ""
 scene.set_background_color(6)
 WordList = [["abate", "to stop"],
     ["abyss", "pit"],
-    ["exiate", "idk tbh"],
+    ["exiate", "atone"],
     ["import", "bring in"]]
 tiles.set_current_tilemap(tilemap("""
     level1
