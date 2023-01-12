@@ -2,12 +2,6 @@ namespace SpriteKind {
     export const objective = SpriteKind.create()
 }
 
-controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_pressed() {
-    if (encounter != 1 && P1.isHittingTile(CollisionDirection.Bottom)) {
-        P1.vx = 20
-    }
-    
-})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function on_on_overlap(sprite: Sprite, otherSprite: Sprite) {
     
     encounter = 1
@@ -21,12 +15,10 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function on_on_overlap(spr
     }
     
     response = 2
-    question = "Is the definition of " + WordList[WordIndice][0] + " " + WordList[DefinitionIndice][1] + `? 
-True=1, False =0
-CLick Z/[A] to answer`
+    question = "Is the definition of " + WordList[WordIndice][0] + " " + WordList[DefinitionIndice][1] + "? \nTrue=1, False =0"
     while (encounter == 1) {
         game.showLongText(question, DialogLayout.Full)
-        response = game.askForNumber("answer on numpad, 0=False,1=True,2=review question")
+        response = game.askForNumber("answer (2 to show question again)")
         if (response == 2) {
             continue
         } else {
@@ -38,17 +30,10 @@ CLick Z/[A] to answer`
             }
             
             encounter = 0
-            P1.x += 30
+            P1.x += 40
         }
         
     }
-})
-controller.combos.attachCombo("u", function on_combos_attach_combo() {
-    if (encounter != 1 && P1.isHittingTile(CollisionDirection.Bottom)) {
-        P1.y += -20
-        P1.vy = 40
-    }
-    
 })
 let score = 0
 let question = ""
@@ -59,8 +44,8 @@ let WordIndice = 0
 let P1 : Sprite = null
 let encounter = 0
 let WordList : string[][] = []
-let QuestionIndices : number[] = []
 let InsertLocation = 0
+let QuestionIndices : number[] = []
 scene.setBackgroundColor(6)
 WordList = [["abate", "to stop"], ["abyss", "a pit"], ["exiate", "to atone"], ["import", "to bring in"], ["incongruity", "not in harmony with ones surroundings"], ["indefatigable", "not tiring"], ["inexplicable", "unexplainable or Inconceivable!"], ["infamous", "a well known reputation of evil"], ["piety", "being reverent, religous"], ["scintillating", "sparkly, shiny"]]
 tiles.setCurrentTilemap(tilemap`
@@ -85,22 +70,52 @@ P1 = sprites.create(img`
             . . . f f f f f f . . . . 
             . . . f f . . f f . . . .
     `, SpriteKind.Player)
+let coin1 = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . 5 5 5 5 5 5 5 5 5 5 5 5 5 . 
+            . . . 5 5 5 5 5 5 5 5 5 5 5 . . 
+            . . . . 5 5 5 5 5 5 5 5 5 . . . 
+            . . . . . 5 5 5 5 5 5 5 . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . .
+    `, SpriteKind.objective)
 coin1.setPosition(32, 105)
-coin2.setPosition(320, 50)
-coin3.setPosition(432, 105)
-coin4.setPosition(640, 96)
-coin5.setPosition(720, 105)
-coin6.setPosition(750, 110)
-coin7.setPosition(860, 60)
-coin8.setPosition(912, 60)
-coin9.setPosition(1024, 88)
-coin10.setPosition(1136, 56)
-coin11.setPosition(1280, 24)
-coin_12.setPosition(1344, 56)
-coin13.setPosition(1510, 105)
-P1.setPosition(13, 105)
+P1.setPosition(10, 100)
 scene.cameraFollowSprite(P1)
 forever(function on_forever() {
+    if (controller.up.isPressed() && controller.right.isPressed()) {
+        if (encounter != 1 && P1.isHittingTile(CollisionDirection.Bottom)) {
+            P1.y += -20
+            P1.x += 20
+            P1.vy = 10
+        }
+        
+    } else if (controller.up.isPressed()) {
+        if (encounter != 1 && P1.isHittingTile(CollisionDirection.Bottom)) {
+            P1.y += -20
+            P1.vy = 20
+        }
+        
+    } else if (controller.right.isPressed()) {
+        if (encounter != 1 && P1.isHittingTile(CollisionDirection.Bottom)) {
+            P1.vx = 20
+        }
+        
+    } else {
+        
+    }
+    
+})
+forever(function on_forever2() {
     if (P1.isHittingTile(CollisionDirection.Right)) {
         P1.vy = 0
     } else {
