@@ -1,33 +1,8 @@
- 
+
+> Try it out at: [https://advfred.github.io/sat-run/](https://advfred.github.io/sat-run/)
+
+I was assigned a project to make an activity to reveiw a set of voabulary words for my english class and thought that MakeCode Arcade would be an easy platform to through something together. About that. Its a fine platform (most of the time) and when you hit a roadblock theres very helpful people on the forum who graciously help out! Its a bit bare bones as far as games go but I think it'll blow all the word searches out of the water :D
+
+Huge thank you to [@ricknoll](https://github.com/riknoll) for pointing out what should have been obvious and getting me back on track
 
 
-> Open this page at [https://advfred.github.io/sat-run/](https://advfred.github.io/sat-run/)
-
-## Use as Extension
-
-This repository can be added as an **extension** in MakeCode.
-
-* open [https://arcade.makecode.com/](https://arcade.makecode.com/)
-* click on **New Project**
-* click on **Extensions** under the gearwheel menu
-* search for **https://github.com/advfred/sat-run** and import
-
-## Edit this project ![Build status badge](https://github.com/advfred/sat-run/workflows/MakeCode/badge.svg)
-
-To edit this repository in MakeCode.
-
-* open [https://arcade.makecode.com/](https://arcade.makecode.com/)
-* click on **Import** then click on **Import URL**
-* paste **https://github.com/advfred/sat-run** and click import
-
-## Blocks preview
-
-This image shows the blocks code from the last commit in master.
-This image may take a few minutes to refresh.
-
-![A rendered view of the blocks](https://github.com/advfred/sat-run/raw/master/.github/makecode/blocks.png)
-
-#### Metadata (used for search, rendering)
-
-* for PXT/arcade
-<script src="https://makecode.com/gh-pages-embed.js"></script><script>makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");</script>
